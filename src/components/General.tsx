@@ -1,63 +1,46 @@
 import { GeneralInfo } from "../interfaces/GeneralInfo";
 import { useState } from "react";
+import { EditPersonalInformation } from "./EditPersonalInformation";
+import { ShowPersonalInformation } from "./ShowPersonalInformation";
 
 function General() {
-  const [generalInformation, setGeneralInformation] = useState({});
   const [nameInput, setNameInput] = useState("");
   const [mailInput, setMailInput] = useState("");
-  const [phoneInput, setPhoneInput] = useState();
-  const [variant, setVariant] = useState<
-    "showPersonalInformation" | "editPersonalInformation"
-  >("showPersonalInformation");
+  const [phoneInput, setPhoneInput] = useState<number | "">("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   function handleClick() {
-    // TODO Ternary function für variant
+    setIsEditing(!isEditing);
   }
 
-  return <button onClick={}>Edit</button>;
-}
-
-export default General;
-
-function showPersonalInformation() {
   return (
     <div className="personal-information-container">
       <h3>Personal information</h3>
-      <div className="general-information">
-        <p>Name: {generalInformation.name}</p>
-        <p>Mail: {generalInformation.mail}</p>
-        <p>Phone: {generalInformation.phone}</p>
-      </div>
+      <button onClick={handleClick}>Edit</button>
+      {isEditing ? (
+        <EditPersonalInformation
+          nameInput={nameInput}
+          phoneInput={phoneInput}
+          mailInput={mailInput}
+          onChangeMailInput={(updatedMailInput) =>
+            setMailInput(updatedMailInput)
+          }
+          onChangePhoneInput={(updatedPhoneInput) =>
+            setPhoneInput(updatedPhoneInput)
+          }
+          onChangeNameInput={(updatedNameInput) =>
+            setNameInput(updatedNameInput)
+          }
+        />
+      ) : (
+        <ShowPersonalInformation
+          nameInput={nameInput}
+          phoneInput={phoneInput}
+          mailInput={mailInput}
+        />
+      )}
     </div>
   );
 }
 
-function editPersonalInformation() {
-  return (
-    <form className="input-container">
-      <input
-        type="text"
-        name="name"
-        id="name"
-        placeholder="Name"
-        value={nameInput}
-      />
-      <input type="text" name="title" id="title" placeholder="Title" />
-      <input type="text" name="address" id="address" placeholder="Address" />
-      <input
-        type="email"
-        name="mail"
-        id="mail"
-        placeholder="E-Mail"
-        value={mailInput}
-      />
-      <input
-        type="tel"
-        name="phone"
-        id="phone"
-        placeholder="Phone number"
-        value={phoneInput}
-      />
-    </form>
-  );
-}
+export default General;

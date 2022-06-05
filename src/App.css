@@ -11,4 +11,9 @@
   align-content: center;
   margin: auto;
   width: 500px;
+  gap: 0.75rem;
+}
+
+button, h3 {
+  width: fit-content;
 }
