@@ -2,11 +2,13 @@ import React from "react";
 
 interface Props {
   nameInput: string;
+  addressInput: string;
   mailInput: string;
   phoneInput: number | "";
   onChangeMailInput: (updatedMailInput: string) => void;
   onChangePhoneInput: (updatedPhoneInput: number) => void;
   onChangeNameInput: (updatedNameInput: string) => void;
+  onChangeAddressInput: (updatedAddressInput: string) => void;
 }
 
 export function EditPersonalInformation(props: Props) {
@@ -20,7 +22,16 @@ export function EditPersonalInformation(props: Props) {
         value={props.nameInput}
         onChange={(event) => props.onChangeNameInput(event.target.value)}
       />
-      <input type="text" name="address" id="address" placeholder="Address" />
+      <input
+        type="text"
+        name="address"
+        id="address"
+        placeholder="Address"
+        value={props.addressInput}
+        onChange={(event) => {
+          props.onChangeAddressInput(event.target.value);
+        }}
+      />
       <input
         type="email"
         name="mail"

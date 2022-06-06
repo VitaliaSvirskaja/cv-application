@@ -1,10 +1,11 @@
-import { GeneralInfo } from "../interfaces/GeneralInfo";
 import { useState } from "react";
 import { EditPersonalInformation } from "./EditPersonalInformation";
 import { ShowPersonalInformation } from "./ShowPersonalInformation";
+import { SectionHeader } from "./SectionHeader";
 
 function General() {
   const [nameInput, setNameInput] = useState("");
+  const [addressInput, setAddressInput] = useState("");
   const [mailInput, setMailInput] = useState("");
   const [phoneInput, setPhoneInput] = useState<number | "">("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -14,12 +15,15 @@ function General() {
   }
 
   return (
-    <div className="personal-information-container">
-      <h3>Personal information</h3>
-      <button onClick={handleClick}>Edit</button>
+    <div className="section-container">
+      <SectionHeader
+        sectionName="Personal Information"
+        onEditClick={handleClick}
+      />
       {isEditing ? (
         <EditPersonalInformation
           nameInput={nameInput}
+          addressInput={addressInput}
           phoneInput={phoneInput}
           mailInput={mailInput}
           onChangeMailInput={(updatedMailInput) =>
@@ -31,10 +35,14 @@ function General() {
           onChangeNameInput={(updatedNameInput) =>
             setNameInput(updatedNameInput)
           }
+          onChangeAddressInput={(updatedAddressInput) => {
+            setAddressInput(updatedAddressInput);
+          }}
         />
       ) : (
         <ShowPersonalInformation
           nameInput={nameInput}
+          addressInput={addressInput}
           phoneInput={phoneInput}
           mailInput={mailInput}
         />
