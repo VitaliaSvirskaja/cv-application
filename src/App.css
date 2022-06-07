@@ -18,4 +18,6 @@ button, h3 {
   width: fit-content;
   height: fit-content;
 }
-
+.section {
+  border: 1px solid black;
+}

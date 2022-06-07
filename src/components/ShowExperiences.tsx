@@ -1,21 +1,25 @@
 import React from "react";
+import { Experience } from "../Experience";
 interface Props {
-  startYear: number | "";
-  endYear: number | "";
-  companyName: string;
-  position: string;
-  jobTasks: string;
+  experiences: Array<Experience>;
 }
 
 export function Showexperiences(props: Props) {
   return (
-    <div>
-      <p>
-        {props.startYear} - {props.endYear}
-      </p>
-      <p>{props.companyName}</p>
-      <p>{props.position}</p>
-      <p>{props.jobTasks}</p>
+    <div className="section">
+      {props.experiences.map((experience) => {
+        return (
+          <div key={experience.id}>
+            <button>Edit</button>
+            <p>
+              {experience.startYear} - {experience.endYear}
+            </p>
+            <p>{experience.company}</p>
+            <p>{experience.position}</p>
+            <p>{experience.jobDescription}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -1,15 +1,16 @@
 import "../SectionHeader.css";
 
 interface Props {
-  onEditClick: () => void;
+  onIconClick: () => void;
   sectionName: string;
+  buttonName: string;
 }
 
 export function SectionHeader(props: Props) {
   return (
     <div className="section-header">
       <h3>{props.sectionName}</h3>
-      <button onClick={props.onEditClick}>Edit</button>
+      <button onClick={props.onIconClick}>{props.buttonName}</button>
     </div>
   );
 }
