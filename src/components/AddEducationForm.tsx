@@ -1,46 +1,42 @@
 import React, { FormEvent, useState } from "react";
-import { Experience } from "../Experience";
 import { v4 as uuidv4 } from "uuid";
+import { EducationInterface } from "./EducationInterface";
 
 interface Props {
   onCancelCLick: () => void;
-  onAddNewExperience: (experience: Experience) => void;
+  onAddNewEducation: (education: EducationInterface) => void;
 }
 
-export function AddExperienceForm(props: Props) {
+export function AddEducationForm(props: Props) {
   const [startYearInput, setStartYearInput] = useState<number | "">("");
   const [endYearInput, setEndYearInput] = useState<number | "">("");
-  const [companyNameInput, setCompanyNameInput] = useState("");
-  const [positionInput, setPositionInput] = useState("");
-  const [jobTaskInput, setJobTaskInput] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [degree, setDegree] = useState("");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (
       startYearInput === "" ||
       endYearInput === "" ||
-      companyNameInput === "" ||
-      positionInput === "" ||
-      jobTaskInput === ""
+      schoolName === "" ||
+      degree === ""
     ) {
       alert("Please fill in all fields!");
     } else if (endYearInput < startYearInput) {
       alert("The end year can't be smaller than the start year!");
     } else {
-      const newExperience: Experience = {
+      const newEducation: EducationInterface = {
         id: uuidv4(),
         startYear: startYearInput,
         endYear: endYearInput,
-        company: companyNameInput,
-        position: positionInput,
-        jobDescription: jobTaskInput,
+        schoolName: schoolName,
+        degree: degree,
       };
-      props.onAddNewExperience(newExperience);
+      props.onAddNewEducation(newEducation);
       setStartYearInput("");
       setEndYearInput("");
-      setCompanyNameInput("");
-      setPositionInput("");
-      setJobTaskInput("");
+      setSchoolName("");
+      setDegree("");
     }
   }
 
@@ -69,32 +65,24 @@ export function AddExperienceForm(props: Props) {
         />
         <input
           type="text"
-          name="companyName"
-          id="companyName"
-          placeholder="Name of Company"
-          value={companyNameInput}
+          name="schoolName"
+          id="schoolName"
+          placeholder="Name of School"
+          value={schoolName}
           onChange={(event) => {
-            setCompanyNameInput(event.target.value);
+            setSchoolName(event.target.value);
           }}
         />
         <input
           type="text"
-          name="position"
-          id="position"
-          placeholder="Job Position"
-          value={positionInput}
+          name="degree"
+          id="degree"
+          placeholder="Degree"
+          value={degree}
           onChange={(event) => {
-            setPositionInput(event.target.value);
+            setDegree(event.target.value);
           }}
         />
-        <textarea
-          maxLength={500}
-          placeholder="Job description"
-          value={jobTaskInput}
-          onChange={(event) => {
-            setJobTaskInput(event.target.value);
-          }}
-        ></textarea>
         <button type="submit">Submit</button>
         <button onClick={props.onCancelCLick}>Cancel</button>
       </form>
