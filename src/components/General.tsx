@@ -18,7 +18,6 @@ function General() {
     <div className="section-container">
       <SectionHeader
         sectionName="Personal Information"
-        buttonName="Edit"
         onIconClick={handleClick}
       />
       {isEditing ? (

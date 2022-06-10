@@ -3,9 +3,18 @@ import { SectionHeader } from "./SectionHeader";
 import { ShowEducation } from "./ShowEducation";
 import { AddEducationForm } from "./AddEducationForm";
 import { EducationInterface } from "./EducationInterface";
+import { Experience } from "../Experience";
 
 export const Educations = () => {
-  const [educations, setEducations] = useState<Array<EducationInterface>>([]);
+  const [educations, setEducations] = useState<Array<EducationInterface>>([
+    {
+      id: "1234b",
+      degree: "Abi",
+      endYear: 2006,
+      startYear: 2001,
+      schoolName: "PGN",
+    },
+  ]);
   const [isAddingNewEducation, setIsAddingNewEducation] = useState(false);
 
   function handleIconClick() {
@@ -22,13 +31,15 @@ export const Educations = () => {
     setIsAddingNewEducation(false);
   }
 
+  function handleDelete(educationID: string) {
+    const newEducation: Array<EducationInterface> = educations.filter(
+      (education) => education.id !== educationID
+    );
+    setEducations(newEducation);
+  }
   return (
     <div className="section-container">
-      <SectionHeader
-        onIconClick={handleIconClick}
-        buttonName="Add"
-        sectionName="Educations"
-      />
+      <SectionHeader onIconClick={handleIconClick} sectionName="Educations" />
 
       {isAddingNewEducation && (
         <AddEducationForm
@@ -36,7 +47,12 @@ export const Educations = () => {
           onAddNewEducation={handleNewEducation}
         />
       )}
-      {<ShowEducation educations={educations} />}
+      {
+        <ShowEducation
+          educations={educations}
+          onDeleteEducation={handleDelete}
+        />
+      }
     </div>
   );
 };

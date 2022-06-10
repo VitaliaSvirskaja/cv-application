@@ -1,7 +1,11 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { Experience } from "../Experience";
+import { IconButton } from "@mui/material";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
 interface Props {
   experiences: Array<Experience>;
+  onDeleteExperience: (experienceID: string) => void;
 }
 
 export function Showexperiences(props: Props) {
@@ -10,7 +14,12 @@ export function Showexperiences(props: Props) {
       {props.experiences.map((experience) => {
         return (
           <div key={experience.id}>
-            <button>Edit</button>
+            <IconButton>
+              <ModeEditIcon />
+            </IconButton>
+            <IconButton onClick={() => props.onDeleteExperience(experience.id)}>
+              <DeleteIcon />
+            </IconButton>
             <p>
               {experience.startYear} - {experience.endYear}
             </p>

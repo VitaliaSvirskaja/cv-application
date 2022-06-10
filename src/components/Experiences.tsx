@@ -5,10 +5,25 @@ import { SectionHeader } from "./SectionHeader";
 import { Experience } from "../Experience";
 
 export const Experiences = () => {
-  const [experiences, setExperiences] = useState<Array<Experience>>([]);
+  const [experiences, setExperiences] = useState<Array<Experience>>([
+    {
+      id: "123",
+      company: "Siemens",
+      startYear: 2010,
+      endYear: 2015,
+      jobDescription: "Managing Accounts",
+      position: "Account Manager",
+    },
+  ]);
 
   const [isAddingNewExperience, setIsAddingNewExperience] = useState(false);
 
+  function handleDelete(experienceID: string) {
+    const newExperiences: Array<Experience> = experiences.filter(
+      (experience) => experience.id !== experienceID
+    );
+    setExperiences(newExperiences);
+  }
   function handleIconClick() {
     setIsAddingNewExperience(!isAddingNewExperience);
   }
@@ -25,19 +40,19 @@ export const Experiences = () => {
 
   return (
     <div className="section-container">
-      <SectionHeader
-        onIconClick={handleIconClick}
-        buttonName="Add"
-        sectionName="Experiences"
-      />
-
+      <SectionHeader onIconClick={handleIconClick} sectionName="Experiences" />
       {isAddingNewExperience && (
         <AddExperienceForm
           onCancelCLick={handleCancelClick}
           onAddNewExperience={handleNewExperience}
         />
       )}
-      {<Showexperiences experiences={experiences} />}
+      {
+        <Showexperiences
+          experiences={experiences}
+          onDeleteExperience={handleDelete}
+        />
+      }
     </div>
   );
 };
