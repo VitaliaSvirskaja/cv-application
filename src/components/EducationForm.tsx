@@ -1,17 +1,26 @@
-import React, { FormEvent, useState } from "react";
+import { Button, TextField } from "@mui/material";
+import React, { FormEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { EducationInterface } from "./EducationInterface";
 
 interface Props {
   onCancelCLick: () => void;
-  onAddNewEducation: (education: EducationInterface) => void;
+  educationToBeEdited: EducationInterface | null;
+  onSave: (educationToBeSaved: EducationInterface) => void;
 }
 
-export function AddEducationForm(props: Props) {
+export function EducationForm(props: Props) {
   const [startYearInput, setStartYearInput] = useState<number | "">("");
   const [endYearInput, setEndYearInput] = useState<number | "">("");
   const [schoolName, setSchoolName] = useState("");
   const [degree, setDegree] = useState("");
+
+  useEffect(() => {
+    setStartYearInput(props.educationToBeEdited?.startYear ?? "");
+    setEndYearInput(props.educationToBeEdited?.endYear ?? "");
+    setSchoolName(props.educationToBeEdited?.schoolName ?? "");
+    setDegree(props.educationToBeEdited?.degree ?? "");
+  }, [props.educationToBeEdited]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,66 +34,79 @@ export function AddEducationForm(props: Props) {
     } else if (endYearInput < startYearInput) {
       alert("The end year can't be smaller than the start year!");
     } else {
-      const newEducation: EducationInterface = {
-        id: uuidv4(),
+      const educationToBeSaved: EducationInterface = {
+        id: props.educationToBeEdited?.id ?? uuidv4(),
         startYear: startYearInput,
         endYear: endYearInput,
         schoolName: schoolName,
         degree: degree,
       };
-      props.onAddNewEducation(newEducation);
-      setStartYearInput("");
-      setEndYearInput("");
-      setSchoolName("");
-      setDegree("");
+      props.onSave(educationToBeSaved);
     }
+    setStartYearInput("");
+    setEndYearInput("");
+    setSchoolName("");
+    setDegree("");
   }
 
   return (
     <div className="section">
       <form className="input-container" onSubmit={handleSubmit}>
-        <input
+        <TextField
+          size="small"
+          id="outlined-number"
+          label="Start year"
           type="number"
           name="startYear"
-          id="startYear"
           placeholder="start year"
           value={startYearInput}
           onChange={(event) => {
             setStartYearInput(parseInt(event.target.value));
           }}
         />
-        <input
+        <TextField
+          size="small"
+          id="outlined-number"
+          label="End year"
           type="number"
           name="endYear"
-          id="endYear"
           placeholder="end year (current year)"
           value={endYearInput}
           onChange={(event) => {
             setEndYearInput(parseInt(event.target.value));
           }}
         />
-        <input
-          type="text"
+        <TextField
+          size="small"
+          id="outlined-basic"
+          label="Name of school"
+          variant="outlined"
           name="schoolName"
-          id="schoolName"
           placeholder="Name of School"
           value={schoolName}
           onChange={(event) => {
             setSchoolName(event.target.value);
           }}
         />
-        <input
-          type="text"
+        <TextField
+          size="small"
+          id="outlined-basic"
+          label="Degree"
+          variant="outlined"
           name="degree"
-          id="degree"
           placeholder="Degree"
           value={degree}
           onChange={(event) => {
             setDegree(event.target.value);
           }}
         />
-        <button type="submit">Submit</button>
-        <button onClick={props.onCancelCLick}>Cancel</button>
+
+        <Button variant="contained" size="small" type="submit">
+          Submit
+        </Button>
+        <Button variant="contained" size="small" onClick={props.onCancelCLick}>
+          Cancel
+        </Button>
       </form>
     </div>
   );

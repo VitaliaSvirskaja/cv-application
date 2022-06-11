@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SectionHeader } from "./SectionHeader";
 import { ShowEducation } from "./ShowEducation";
-import { AddEducationForm } from "./AddEducationForm";
+import { EducationForm } from "./EducationForm";
 import { EducationInterface } from "./EducationInterface";
 import { Experience } from "../Experience";
 
@@ -15,20 +15,23 @@ export const Educations = () => {
       schoolName: "PGN",
     },
   ]);
-  const [isAddingNewEducation, setIsAddingNewEducation] = useState(false);
+  const [isEducationFormVisible, setIsEducationFormVisible] = useState(false);
+  const [educationToBeEdited, setEducationToBeEdited] =
+    useState<EducationInterface | null>(null);
 
-  function handleIconClick() {
-    setIsAddingNewEducation(!isAddingNewEducation);
+  function handleNewEducationClick() {
+    setIsEducationFormVisible(!isEducationFormVisible);
+    setEducationToBeEdited(null);
   }
 
   function handleCancelClick() {
-    setIsAddingNewEducation(false);
+    setIsEducationFormVisible(false);
   }
 
   function handleNewEducation(newEducation: EducationInterface) {
     const finalEducations = [...educations, newEducation];
     setEducations(finalEducations);
-    setIsAddingNewEducation(false);
+    setIsEducationFormVisible(false);
   }
 
   function handleDelete(educationID: string) {
@@ -37,24 +40,56 @@ export const Educations = () => {
     );
     setEducations(newEducation);
   }
+
+  function handleEditedEducation(editedEducation: EducationInterface) {
+    const index = educations.findIndex(
+      (education) => education.id === editedEducation.id
+    );
+    const updatedEducations = [...educations];
+    updatedEducations[index] = editedEducation;
+    setEducations(updatedEducations);
+    setIsEducationFormVisible(false);
+  }
+
+  function handleSave(educationToBeSaved: EducationInterface) {
+    if (educationToBeEdited) {
+      handleEditedEducation(educationToBeSaved);
+    } else {
+      handleNewEducation(educationToBeSaved);
+    }
+  }
+
+  function handleEdit(educationID: string) {
+    setIsEducationFormVisible(true);
+    const foundEducationToBeEdited: EducationInterface | undefined =
+      educations.find((education) => education.id === educationID);
+    if (foundEducationToBeEdited === undefined) {
+      return;
+    }
+    setEducationToBeEdited(foundEducationToBeEdited);
+  }
+
   return (
     <div className="section-container">
-      <SectionHeader onIconClick={handleIconClick} sectionName="Educations" />
+      <SectionHeader
+        onIconClick={handleNewEducationClick}
+        sectionName="Educations"
+      />
 
-      {isAddingNewEducation && (
-        <AddEducationForm
+      {isEducationFormVisible && (
+        <EducationForm
           onCancelCLick={handleCancelClick}
-          onAddNewEducation={handleNewEducation}
+          educationToBeEdited={educationToBeEdited}
+          onSave={handleSave}
         />
       )}
       {
         <ShowEducation
           educations={educations}
           onDeleteEducation={handleDelete}
+          onEditClick={handleEdit}
         />
       }
     </div>
   );
 };
-
-export default Educations;

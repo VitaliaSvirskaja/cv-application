@@ -7,6 +7,7 @@ import { IconButton } from "@mui/material";
 interface Props {
   educations: Array<EducationInterface>;
   onDeleteEducation: (educationID: string) => void;
+  onEditClick: (educationID) => void;
 }
 
 export function ShowEducation(props: Props) {
@@ -15,7 +16,7 @@ export function ShowEducation(props: Props) {
       {props.educations.map((education) => {
         return (
           <div key={education.id}>
-            <IconButton>
+            <IconButton onClick={() => props.onEditClick(education.id)}>
               <ModeEditIcon />
             </IconButton>
             <IconButton onClick={() => props.onDeleteEducation(education.id)}>
