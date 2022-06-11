@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 interface Props {
   experiences: Array<Experience>;
   onDeleteExperience: (experienceID: string) => void;
+  onEditClick: (experienceID: string) => void;
 }
 
 export function Showexperiences(props: Props) {
@@ -14,7 +15,7 @@ export function Showexperiences(props: Props) {
       {props.experiences.map((experience) => {
         return (
           <div key={experience.id}>
-            <IconButton>
+            <IconButton onClick={() => props.onEditClick(experience.id)}>
               <ModeEditIcon />
             </IconButton>
             <IconButton onClick={() => props.onDeleteExperience(experience.id)}>

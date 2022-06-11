@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AddExperienceForm } from "./AddExperienceForm";
+import { ExperienceForm } from "./ExperienceForm";
 import { Showexperiences } from "./ShowExperiences";
 import { SectionHeader } from "./SectionHeader";
 import { Experience } from "../Experience";
@@ -16,7 +16,9 @@ export const Experiences = () => {
     },
   ]);
 
-  const [isAddingNewExperience, setIsAddingNewExperience] = useState(false);
+  const [isExperienceFormVisible, setIsExperienceFormVisible] = useState(false);
+  const [experienceToBeEdited, setExperienceToBeEdited] =
+    useState<Experience | null>(null);
 
   function handleDelete(experienceID: string) {
     const newExperiences: Array<Experience> = experiences.filter(
@@ -24,37 +26,70 @@ export const Experiences = () => {
     );
     setExperiences(newExperiences);
   }
-  function handleIconClick() {
-    setIsAddingNewExperience(!isAddingNewExperience);
+  function handleNewExperienceClick() {
+    setIsExperienceFormVisible(!isExperienceFormVisible);
+    setExperienceToBeEdited(null);
   }
 
   function handleCancelClick() {
-    setIsAddingNewExperience(false);
+    setIsExperienceFormVisible(false);
   }
 
   function handleNewExperience(newExperience: Experience) {
     const finalExperiences = [...experiences, newExperience];
     setExperiences(finalExperiences);
-    setIsAddingNewExperience(false);
+    setIsExperienceFormVisible(false);
+  }
+
+  function handleEditedExperience(editedExperience: Experience) {
+    const index = experiences.findIndex(
+      (experience) => experience.id === editedExperience.id
+    );
+    const updatedExperiences = [...experiences];
+    updatedExperiences[index] = editedExperience;
+    setExperiences(updatedExperiences);
+    setIsExperienceFormVisible(false);
+  }
+
+  function handleSave(experienceToBeSaved: Experience) {
+    if (experienceToBeEdited) {
+      handleEditedExperience(experienceToBeSaved);
+    } else {
+      handleNewExperience(experienceToBeSaved);
+    }
+  }
+
+  function handleEdit(experienceID: string) {
+    setIsExperienceFormVisible(true);
+    const foundExperienceToBeEdited: Experience | undefined = experiences.find(
+      (experience) => experience.id === experienceID
+    );
+    if (foundExperienceToBeEdited === undefined) {
+      return;
+    }
+    setExperienceToBeEdited(foundExperienceToBeEdited);
   }
 
   return (
     <div className="section-container">
-      <SectionHeader onIconClick={handleIconClick} sectionName="Experiences" />
-      {isAddingNewExperience && (
-        <AddExperienceForm
+      <SectionHeader
+        onIconClick={handleNewExperienceClick}
+        sectionName="Experiences"
+      />
+      {isExperienceFormVisible && (
+        <ExperienceForm
           onCancelCLick={handleCancelClick}
-          onAddNewExperience={handleNewExperience}
+          experienceToBeEdited={experienceToBeEdited}
+          onSave={handleSave}
         />
       )}
       {
         <Showexperiences
           experiences={experiences}
           onDeleteExperience={handleDelete}
+          onEditClick={handleEdit}
         />
       }
     </div>
   );
 };
-
-export default Experiences;

@@ -1,18 +1,27 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Experience } from "../Experience";
 import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   onCancelCLick: () => void;
-  onAddNewExperience: (experience: Experience) => void;
+  experienceToBeEdited: Experience | null;
+  onSave: (experienceToBeSaved: Experience) => void;
 }
 
-export function AddExperienceForm(props: Props) {
+export function ExperienceForm(props: Props) {
   const [startYearInput, setStartYearInput] = useState<number | "">("");
   const [endYearInput, setEndYearInput] = useState<number | "">("");
   const [companyNameInput, setCompanyNameInput] = useState("");
   const [positionInput, setPositionInput] = useState("");
   const [jobTaskInput, setJobTaskInput] = useState("");
+
+  useEffect(() => {
+    setStartYearInput(props.experienceToBeEdited?.startYear ?? "");
+    setEndYearInput(props.experienceToBeEdited?.endYear ?? "");
+    setCompanyNameInput(props.experienceToBeEdited?.company ?? "");
+    setPositionInput(props.experienceToBeEdited?.position ?? "");
+    setJobTaskInput(props.experienceToBeEdited?.jobDescription ?? "");
+  }, [props.experienceToBeEdited]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,21 +36,21 @@ export function AddExperienceForm(props: Props) {
     } else if (endYearInput < startYearInput) {
       alert("The end year can't be smaller than the start year!");
     } else {
-      const newExperience: Experience = {
-        id: uuidv4(),
+      const experienceToBeSaved: Experience = {
+        id: props.experienceToBeEdited?.id ?? uuidv4(),
         startYear: startYearInput,
         endYear: endYearInput,
         company: companyNameInput,
         position: positionInput,
         jobDescription: jobTaskInput,
       };
-      props.onAddNewExperience(newExperience);
-      setStartYearInput("");
-      setEndYearInput("");
-      setCompanyNameInput("");
-      setPositionInput("");
-      setJobTaskInput("");
+      props.onSave(experienceToBeSaved);
     }
+    setStartYearInput("");
+    setEndYearInput("");
+    setCompanyNameInput("");
+    setPositionInput("");
+    setJobTaskInput("");
   }
 
   return (
